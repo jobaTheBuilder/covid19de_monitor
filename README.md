@@ -73,7 +73,7 @@ Based on [slacks python api](https://github.com/slackapi/python-slack-sdk).
 
 9.  Copy your Bot token and insert it in SlackBot.py
 
-         ![img](./img/copy-token.jpg)
+     ![img](./img/copy-token.jpg)
 
 10. Finally change the channel in SlackBot.py to your desired channel
 
