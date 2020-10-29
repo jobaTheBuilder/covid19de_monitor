@@ -1,6 +1,6 @@
 import requests
 import json
-import sys
+import argparse
 
 
 class COVIDUpdate:
@@ -9,7 +9,7 @@ class COVIDUpdate:
     def __init__(self, rest_url=DEFAULT_REST_URI):
         self.rest_url = rest_url
 
-    def check(self, areas):
+    def check(self, area_list):
         data = []
         dates = set()
         response = requests.get(self.rest_url, verify=True)
@@ -17,7 +17,7 @@ class COVIDUpdate:
             response_data = json.loads(response.content)
             features = response_data['features']
             for feature in features:
-                if self.in_area(feature, areas):
+                if self.in_area(feature, area_list):
                     dates.add(self.get(feature, 'last_update'))
                     gf = self.get(feature, 'GEN')
                     bf = self.get(feature, 'BEZ')
@@ -25,6 +25,24 @@ class COVIDUpdate:
                     data.append(str(gf) + ' (' + str(bf) + '): ' + str(c7p100))
         data.sort()
         return 'RKI ' + ', '.join(dates) + ': ' + ', '.join(data)
+
+    def find_areas(self, filter_string=None):
+        area_list = []
+        response = requests.get(self.rest_url, verify=True)
+        if response.ok:
+            response_data = json.loads(response.content)
+            features = response_data['features']
+            for feature in features:
+                gf = self.get(feature, 'GEN')
+                bf = self.get(feature, 'BEZ')
+                if not filter_string:
+                    area_list.append({'GEN': gf, 'BEZ': bf})
+                elif filter_string in gf or filter_string in bf:
+                    area_list.append({'GEN': gf, 'BEZ': bf})
+        return area_list
+
+    def list_areas(self):
+        return self.find_areas()
 
     def in_area(self, feature, areas):
         f_gen = self.get(feature, 'GEN')
@@ -39,17 +57,38 @@ class COVIDUpdate:
     def get(self, feature, attribute_name):
         return feature['attributes'][attribute_name]
 
+    def print_me(self, json_strct):
+        if json_strct:
+            print(json.dumps(json_strct, indent=4))
+
 
 if __name__ == "__main__":
-    # a default city, just in case that no city definition can be found in the command line.
-    # specify the city definition as json
-    areas = [{'GEN': 'Würzburg', 'BEZ': 'Kreisfreie Stadt'}]
-    if sys.argv[1:] and sys.argv[1:][0]:
-        with open(sys.argv[1:][0]) as json_file:
-            areas = json.load(json_file)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-l", "--list", help="Lists the available areas of interest as config JSON.", action="store_true")
+    parser.add_argument("-f", "--find", help="Find & filters the available areas of interest according to the given string (case sensitive!).")
+    parser.add_argument("-a", "--areas", help="Receives JSON file with defined areas of interest.")
+    parser.add_argument("-i", "--incidence", help="Find all areas with names including the given string and return the 100k-7 incidence.")
+    args = parser.parse_args()
     cu = COVIDUpdate()
-    result = cu.check(areas)
-    print(result)
+    if args.list:
+        cu.print_me(cu.list_areas())
+    elif args.find:
+        cu.print_me(cu.find_areas(args.find))
+    elif args.areas:
+        with open(args.areas) as json_file:
+            example_area = json.load(json_file)
+        result = cu.check(example_area)
+        print(result)
+    elif args.incidence:
+        areas = cu.find_areas(args.incidence)
+        result = cu.check(areas)
+        print(result)
+    else:
+        print("Please use help to see your options (--help).\nHere is an example...")
+        example_area = [{'GEN': 'Würzburg', 'BEZ': 'Kreisfreie Stadt'}]
+        result = cu.check(example_area)
+        print(result)
+
 
 
 

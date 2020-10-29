@@ -11,22 +11,35 @@ The data API of the RKI is used:
 ## Usage
 
 ### Command Line
-Call the script ``COVIDUpdate.py`` with a JSON file in the command line. 
-The JSON file defines the areas of interest.  
 
-The example file  ``areas_example.json`` defines the two areas of interest "Würzburg city" and "Würzburg Landkreis":
 ```
-[
-    {
-        "BEZ": "Kreisfreie Stadt",
-        "GEN": "Würzburg"
-    },
-    {
-        "BEZ": "Landkreis",
-        "GEN": "Würzburg"
-    }
-]
+optional arguments:
+  -h, --help            show this help message and exit
+  -l, --list            Lists the available areas of interest as config JSON.
+  -f FIND, --find FIND  Find & filters the available areas of interest
+                        according to the given string (case sensitive!).
+  -a AREAS, --areas AREAS
+                        Receives JSON file with defined areas of interest.
+  -i INCIDENCE, --incidence INCIDENCE
+                        Find all areas with names including the given string
+                        and return the 100k-7 incidence.
 ```
+
+#### Examples
+
+Find all 100k-by-7-days incidences for areas including the String "Berlin":
+
+```python COVIDUpdate.py -i Berlin```
+
+Find all 100k-by-7-days incidences for areas defined in the JSON file ``areas_example.json``:
+
+```python COVIDUpdate.py -a areas_example.json```
+
+Define or extend a JSON config file for areas, by finding area definitions, 
+e.g. find all areas including the String "Berlin": 
+
+```python COVIDUpdate.py -f Berlin``` 
+
 
 ### API
 
