@@ -4,23 +4,43 @@ A simple python script to retrieve COVID19 data from the german RKI (Robert Koch
 
 ## Motivation
 
-The script is used collect 7-day-by-100K-people incidents for a pre-defined number of cities.
-The interesting cities are defined in the script by name of the city and the city attribute.
-
+The script collects 7-day-by-100K-people incidents for a pre-defined number of areas.
 The data API of the RKI is used:
-https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0
+``https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0``
 
-## Example
+## Usage
 
-The statement
+### Command Line
+Call the script ``COVIDUpdate.py`` with a JSON file in the command line. 
+The JSON file defines the areas of interest.  
+
+The example file  ``areas_example.json`` defines the two areas of interest "Würzburg city" and "Würzburg Landkreis":
+```
+[
+    {
+        "BEZ": "Kreisfreie Stadt",
+        "GEN": "Würzburg"
+    },
+    {
+        "BEZ": "Landkreis",
+        "GEN": "Würzburg"
+    }
+]
+```
+
+### API
+
+You may call the script within your own code.
+The following snippet retrieves the data for the area of interest "Würzburg city".
 
 ```
-target_areas = [{'GEN': 'Würzburg', 'BEZ': 'Kreisfreie Stadt'},
-                {'GEN': 'Fürstenfeldbruck', 'BEZ': 'Landkreis'}]
+areas = [{'GEN': 'Würzburg', 'BEZ': 'Kreisfreie Stadt'}]
+cu = COVIDUpdate()
+result = cu.check(areas)
+print(result)
 ```
 
-defines the cities Würzburg and Fürstenfeldbruck as intereysting cities to
-collect incident data for.
+See the included Slack-Bot for another example of API use.
 
 ## Compatibilty
 
