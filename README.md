@@ -29,11 +29,11 @@ The script is used with Python 3.8
 # Slack-Bot
 
 Let's you directly send the COVID19 data to a slack channel via a custom Slack APP.
-Based on [slacks python api](https://github.com/slackapi/python-slack-sdk).
+Using [slacks python library](https://pypi.org/project/slackclient/).
 
 ## Requirements
 
-### Slackclient
+### slackclient
 
 `pip install slackclient`
 
