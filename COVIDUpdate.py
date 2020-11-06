@@ -3,6 +3,19 @@ import json
 import argparse
 
 
+class COVIDResultData:
+    def __init__(self, data, dates):
+        self.data = data
+        self.dates = dates
+        self.str = None
+
+    def __str__(self):
+        if not self.str:
+            self.str = 'RKI ' + ', '.join(self.dates) + ': ' + ', '.join(key + ': ' + str(self.data[key]) for key in sorted(self.data))
+
+        return self.str
+
+
 class COVIDUpdate:
     DEFAULT_REST_URI = 'https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID,GEN,BEZ,last_update,cases7_per_100k&outSR=4326&f=json'
 
@@ -10,7 +23,7 @@ class COVIDUpdate:
         self.rest_url = rest_url
 
     def check(self, area_list):
-        data = []
+        data = {}
         dates = set()
         response = requests.get(self.rest_url, verify=True)
         if response.ok:
@@ -19,12 +32,11 @@ class COVIDUpdate:
             for feature in features:
                 if self.in_area(feature, area_list):
                     dates.add(self.get(feature, 'last_update'))
-                    gf = self.get(feature, 'GEN')
-                    bf = self.get(feature, 'BEZ')
+                    gf = str(self.get(feature, 'GEN'))
+                    bf = str(self.get(feature, 'BEZ'))
                     c7p100 = round(self.get(feature, 'cases7_per_100k'), 1)
-                    data.append(str(gf) + ' (' + str(bf) + '): ' + str(c7p100))
-        data.sort()
-        return 'RKI ' + ', '.join(dates) + ': ' + ', '.join(data)
+                    data['{0} ({1})'.format(gf, bf)] = c7p100
+        return COVIDResultData(data, dates)
 
     def find_areas(self, filter_string=None):
         area_list = []
@@ -87,8 +99,4 @@ if __name__ == "__main__":
         print("Please use help to see your options (--help).\nHere is an example...")
         example_area = [{'GEN': 'Würzburg', 'BEZ': 'Kreisfreie Stadt'}]
         result = cu.check(example_area)
-        print(result)
-
-
-
-
+        print(str(result))

@@ -17,7 +17,7 @@ result = cu.check(target_areas)
 try:
   response = client.chat_postMessage(
     channel="<PREFFERED-CHANNEL>",
-    text=result
+    text=str(result)
   )
 except SlackApiError as e:
   # You will get a SlackApiError if "ok" is False
