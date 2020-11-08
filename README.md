@@ -53,13 +53,13 @@ result = cu.check(areas)
 print(result)
 ```
 
-See the included Slack-Bot for another example of API use.
+See the included Slack bots for another example of API use.
 
 ## Compatibilty
 
 The script is used with Python 3.8
 
-# Slack-Bot
+# Slack Bot (Using `slackclient`)
 
 Let's you directly send the COVID19 data to a slack channel via a custom Slack APP.
 Using [slacks python library](https://pypi.org/project/slackclient/).
@@ -109,4 +109,19 @@ Using [slacks python library](https://pypi.org/project/slackclient/).
      ![img](./img/copy-token.jpg)
 
 10. Finally change the channel in SlackBot.py to your desired channel
+
+# Slack Bot (using `bolt`)
+
+Similar to the simple bot, this bot will keep running in the background and post updates at a given time every day.
+You can configure the channel, trigger time and channel to send to via the `slack.config.json` file expected in `$PWD/config/`.
+
+## Requirements
+
+In addition to a `pip install slack_bolt`, follow the [Bolt Getting Started](https://api.slack.com/start/building/bolt-python)
+guide to get a set of token and signing secret needed to connect the bot to Slack.
+
+## Docker deployment
+
+The included `Dockerfile` produces a container running the bot, exposing port 3000 for incoming messages.
+Be sure to bind-mount the `slack.config.json` to `/app/config` or make it otherwise available. 
 
