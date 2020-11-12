@@ -103,5 +103,4 @@ def post_update():
 
 if __name__ == "__main__":
     Timer(next_update(), post_update, ()).start()
-    Timer(10, post_update, ()).start()
     app.start(3000)
