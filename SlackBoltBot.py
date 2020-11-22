@@ -55,10 +55,10 @@ def build_message(result, previous_result=None):
                     extra_info += ' :arrow_double_up:'
                 elif diff_pct > 0.01:
                     extra_info += ' :arrow_up_small:'
-                elif diff_pct < -0.01:
-                    extra_info += ' :arrow_down_small:'
                 elif diff_pct < -0.1:
                     extra_info += ' :arrow_double_down:'
+                elif diff_pct < -0.01:
+                    extra_info += ' :arrow_down_small:'
                 else:
                     extra_info += ' :left_right_arrow:'
 
