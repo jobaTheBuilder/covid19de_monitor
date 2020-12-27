@@ -79,6 +79,10 @@ optional arguments:
                         Show the Percentage of all occupied beds in Germany including the 7 day emergency beds
   -bn BUNDESLANDWITHEMERGENCY, --bundeslandwithemergency BUNDESLANDWITHEMERGENCY
                         Show the percentage of occupied beds in a specific state including the 7 day emergency beds. Example: -bn BY
+  -p PREFIX, --prefix PREFIX
+                        Print a given prefix as string before the message with the actual number.
+                        Example: -p 'BY beds' -bn BY
+
 ```
 
 ### Examples
@@ -94,7 +98,7 @@ Utilization of intensive care beds in bavaria in percent
 Utilization of intensive care beds in bavaria in percent (including emergency
 beds which could be provided within 7 days)
 
-`./IntensivregisterUpdate.py -bn BY`
+`./IntensivregisterUpdate.py -p 'Beds in BY: ' -bn BY`
 
 # Slack Bot (Using `slackclient`)
 
