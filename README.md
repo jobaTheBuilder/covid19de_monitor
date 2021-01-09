@@ -111,7 +111,7 @@ beds which could be provided within 7 days)
 
 Utilization of intensive care in a specific area
 
-Landreis
+Landkreis
 
 `./IntensivregisterUpdate.py -lk Würzburg`
 

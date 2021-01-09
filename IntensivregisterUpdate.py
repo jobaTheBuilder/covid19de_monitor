@@ -156,7 +156,7 @@ class IntensivregisterUpdate:
             if BEZ != "Landkreis":
                 BEZ = "Stadt"
             result += "{gen} {bez}: {rate}\n".format(gen=GEN,bez=BEZ,rate=self.lk_data_formatted(self.get_lk_data(GEN + " " + BEZ)))
-        return result[:-2]
+        return result[:-1]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
