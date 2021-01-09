@@ -70,10 +70,6 @@ Uses the API from [intensivregister.de](https://www.intensivregister.de/#/aktuel
 
 ```
 optional arguments:
-    -p PREFIX, --prefix PREFIX
-                        Print a given prefix as string before the message with the actual number.
-                        Example: -p 'BY beds' -bn BY
-                        Show the percentage of occupied beds in a specific state including the 7 day emergency beds. Example: -bn BYoptional arguments:
   -h, --help            show this help message and exit
   -lb, --listbundeslander
                         Lists all available states and their abbreviations
@@ -83,11 +79,16 @@ optional arguments:
                         Print Stadt occupancy rate
   -b BUNDESLAND, --bundesland BUNDESLAND
                         Show the percentage of occupied beds in a specific state. Example: -b BY
-  -d, --deutschland         Show the Percentage of all occupied beds in Germany
+  -d, --deutschland     Show the Percentage of all occupied beds in Germany
   -dn, --deutschlandwithemergency
-                        Show the Percentage of all occupied beds in Germany including the 7 day emergency beds
+                        Show the Percentage of all occupied beds in Germany including the 7 day
+                        emergency beds
   -bn BUNDESLANDWITHEMERGENCY, --bundeslandwithemergency BUNDESLANDWITHEMERGENCY
-                        Show the percentage of occupied beds in a specific state including the 7 day emergency beds. Example: -bn BYoptional arguments:
+                        Show the percentage of occupied beds in a specific state including the 7 day
+                        emergency beds. Example: -bn BY
+  -p PREFIX, --prefix PREFIX
+                        Print given prefix as String before the actual number. Example: -p 'BY beds'
+                        -bn BY
   -la, --listareas      Prints all names of the Landreise and Städte
   -a AREAS, --areas AREAS
                         Receives JSON file with defined areas of interest.
