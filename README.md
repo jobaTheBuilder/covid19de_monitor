@@ -6,7 +6,7 @@ A simple python script to retrieve COVID19 data from the german RKI (Robert Koch
 
 The script collects 7-day-by-100K-people incidents for a pre-defined number of areas.
 The data API of the RKI is used:
-``https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0``
+`https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0`
 
 ## Usage
 
@@ -29,17 +29,16 @@ optional arguments:
 
 Find all 100k-by-7-days incidences for areas including the String "Berlin":
 
-```python COVIDUpdate.py -i Berlin```
+`python COVIDUpdate.py -i Berlin`
 
-Find all 100k-by-7-days incidences for areas defined in the JSON file ``areas_example.json``:
+Find all 100k-by-7-days incidences for areas defined in the JSON file `areas_example.json`:
 
-```python COVIDUpdate.py -a areas_example.json```
+`python COVIDUpdate.py -a areas_example.json`
 
-Define or extend a JSON config file for areas, by finding area definitions, 
-e.g. find all areas including the String "Berlin": 
+Define or extend a JSON config file for areas, by finding area definitions,
+e.g. find all areas including the String "Berlin":
 
-```python COVIDUpdate.py -f Berlin``` 
-
+`python COVIDUpdate.py -f Berlin`
 
 ### API
 
@@ -58,6 +57,76 @@ See the included Slack bots for another example of API use.
 ## Compatibilty
 
 The script is used with Python 3.8
+
+# IntensivRegisterUpdate
+
+Provides information about the current utilization of intensive care beds in Germany.
+Uses the API from [intensivregister.de](https://www.intensivregister.de/#/aktuelle-lage/laendertabelle) and fetches data from:
+`https://www.intensivregister.de/api/public/reporting/laendertabelle`
+
+## Usage
+
+### Command Line
+
+```
+optional arguments:
+  -h, --help            show this help message and exit
+  -l, --list            Lists all available states and their abbreviations
+  -b BUNDESLAND, --bundesland BUNDESLAND
+                        Show the percentage of occupied beds in a specific state. Example: -b BY
+  -a, --all             Show the Percentage of all occupied beds in Germany
+  -an, --allwithemergency
+                        Show the Percentage of all occupied beds in Germany including the 7 day emergency beds
+  -bn BUNDESLANDWITHEMERGENCY, --bundeslandwithemergency BUNDESLANDWITHEMERGENCY
+                        Show the percentage of occupied beds in a specific state including the 7 day emergency beds. Example: -bn BYoptional arguments:
+  -h, --help            show this help message and exit
+  -lb, --listbundeslander
+                        Lists all available states and their abbreviations
+  -lk LANDKREIS, --landkreis LANDKREIS
+                        Print Landkreis occupancy rate
+  -s STADT, --stadt STADT
+                        Print Stadt occupancy rate
+  -b BUNDESLAND, --bundesland BUNDESLAND
+                        Show the percentage of occupied beds in a specific state. Example: -b BY
+  -g, --germany         Show the Percentage of all occupied beds in Germany
+  -gn, --germanywithemergency
+                        Show the Percentage of all occupied beds in Germany including the 7 day emergency beds
+  -bn BUNDESLANDWITHEMERGENCY, --bundeslandwithemergency BUNDESLANDWITHEMERGENCY
+                        Show the percentage of occupied beds in a specific state including the 7 day emergency beds. Example: -bn BY
+  -la, --listareas      Prints all names of the Landreise and Städte
+  -a AREAS, --areas AREAS
+                        Receives JSON file with defined areas of interest.
+
+```
+
+### Examples
+
+Utilization of intensive care beds in germany in percent
+
+`./IntensivregisterUpdate.py -a`
+
+Utilization of intensive care beds in bavaria in percent
+
+`./IntensivregisterUpdate.py -b BY`
+
+Utilization of intensive care beds in bavaria in percent (including emergency
+beds which could be provided within 7 days)
+
+`./IntensivregisterUpdate.py -bn BY`
+
+Utilization of intensive care in a specific area
+
+Landreis
+
+`./IntensivregisterUpdate.py -lk Würzburg`
+
+Stadt
+
+`./IntensivregisterUpdate.py -s Würzburg`
+
+Utilization of intensive care in a specific area from json file
+
+`./IntensivregisterUpdate.py -a areas_example.json`
 
 # Slack Bot (Using `slackclient`)
 
@@ -106,7 +175,7 @@ Using [slacks python library](https://pypi.org/project/slackclient/).
 
 9.  Copy your Bot token and insert it in SlackBot.py
 
-     ![img](./img/copy-token.jpg)
+    ![img](./img/copy-token.jpg)
 
 10. Finally change the channel in SlackBot.py to your desired channel
 
@@ -123,5 +192,4 @@ guide to get a set of token and signing secret needed to connect the bot to Slac
 ## Docker deployment
 
 The included `Dockerfile` produces a container running the bot, exposing port 3000 for incoming messages.
-Be sure to bind-mount the `slack.config.json` to `/app/config` or make it otherwise available. 
-
+Be sure to bind-mount the `slack.config.json` to `/app/config` or make it otherwise available.
