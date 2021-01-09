@@ -119,7 +119,9 @@ Utilization of intensive care in a specific area
 Landreis
 
 `./IntensivregisterUpdate.py -lk Würzburg`
+
 Stadt
+
 `./IntensivregisterUpdate.py -s Würzburg`
 
 Utilization of intensive care in a specific area from json file
