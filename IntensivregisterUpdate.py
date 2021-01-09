@@ -146,7 +146,7 @@ class IntensivregisterUpdate:
         ob = int(lk_data["betten_belegt"])
         ab = fb + ob
         rate = round(ob/ab*100,2)
-        return ("Occupancy Rate: {percent}% ({ob}/{ab})").format(percent=rate, ob=ob ,ab=ab)
+        return ("{percent}% ({ob}/{ab})").format(percent=rate, ob=ob ,ab=ab)
 
     def lk_data_for_areas(self,areas):
         result = ""
