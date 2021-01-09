@@ -18,6 +18,7 @@ class IntensivregisterUpdate:
 
 
     def __init__(self):
+        self.prefix = ''
         th_bl = threading.Thread(self.update_bl_data())
         th_lk = threading.Thread(self.update_lk_data())
         th_bl.start()
@@ -163,36 +164,40 @@ if __name__ == "__main__":
     parser.add_argument("-lk", "--landkreis", help="Print Landkreis occupancy rate", type=str)
     parser.add_argument("-s", "--stadt", help="Print Stadt occupancy rate", type=str)
     parser.add_argument("-b", "--bundesland", help="Show the percentage of occupied beds in a specific state. Example: -b BY")
-    parser.add_argument("-g", "--germany", help="Show the Percentage of all occupied beds in Germany",action="store_true")
-    parser.add_argument("-gn", "--germanywithemergency", help="Show the Percentage of all occupied beds in Germany including the 7 day emergency beds",action="store_true")
+    parser.add_argument("-d", "--deutschland", help="Show the Percentage of all occupied beds in Germany",action="store_true")
+    parser.add_argument("-dn", "--deutschlandwithemergency", help="Show the Percentage of all occupied beds in Germany including the 7 day emergency beds",action="store_true")
     parser.add_argument("-bn", "--bundeslandwithemergency", help="Show the percentage of occupied beds in a specific state including the 7 day emergency beds. Example: -bn BY")
+    parser.add_argument("-p", "--prefix", help="Print given prefix as String before the actual number. Example: -p 'BY beds' -bn BY")
     parser.add_argument("-la","--listareas", help="Prints all names of the Landreise and Städte",action="store_true")
     parser.add_argument("-a","--areas", help="Receives JSON file with defined areas of interest.")
     args = parser.parse_args()
     iu = IntensivregisterUpdate()
+    if args.prefix:
+        iu.prefix = args.prefix
+        args = parser.parse_args()
     if args.listbundeslander:
         print(json.dumps(BL_DICT,indent=4))
     elif args.bundesland:
-        print(iu.get_occupancy_by_bl_in_percent(args.bundesland))
-    elif args.germany:
-        print(iu.get_overall_occupancy_in_percent())
-    elif args.germanywithemergency:
-        print(iu.get_overall_occupancy_in_percent_with_emergency_beds())
+        print(iu.prefix + str(iu.get_occupancy_by_bl_in_percent(args.bundesland)))
+    elif args.deutschland:
+        print(iu.prefix + str(iu.get_overall_occupancy_in_percent()))
+    elif args.deutschlandwithemergency:
+        print(iu.prefix + str(iu.get_overall_occupancy_in_percent_with_emergency_beds()))
     elif args.bundeslandwithemergency:
-        print(iu.get_occupancy_by_bl_in_percent_with_7d_emgergancy_beds_in_percent(args.bundeslandwithemergency))
+        print(iu.prefix + str(iu.get_occupancy_by_bl_in_percent_with_7d_emgergancy_beds_in_percent(args.bundeslandwithemergency)))
     elif args.landkreis:
         result = iu.lk_data_formatted(iu.get_lk_data(args.landkreis + " Landkreis"))
         if result != None:
-            print(result)
+            print(iu.prefix + str(result))
     elif args.stadt:
         result = iu.lk_data_formatted(iu.get_lk_data(args.stadt + " Stadt"))
         if result != None:
-            print(result)
+            print(iu.prefix + str(result))
     elif args.areas:
         with open(args.areas) as json_file:
             example_area = json.load(json_file)
         result = iu.lk_data_for_areas(example_area)
-        print(result)
+        print(iu.prefix + str(result))
     elif args.listareas:
         l = list(GS_DICT.keys())
         l.sort()
