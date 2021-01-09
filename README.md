@@ -78,7 +78,25 @@ optional arguments:
   -an, --allwithemergency
                         Show the Percentage of all occupied beds in Germany including the 7 day emergency beds
   -bn BUNDESLANDWITHEMERGENCY, --bundeslandwithemergency BUNDESLANDWITHEMERGENCY
+                        Show the percentage of occupied beds in a specific state including the 7 day emergency beds. Example: -bn BYoptional arguments:
+  -h, --help            show this help message and exit
+  -lb, --listbundeslander
+                        Lists all available states and their abbreviations
+  -lk LANDKREIS, --landkreis LANDKREIS
+                        Print Landkreis occupancy rate
+  -s STADT, --stadt STADT
+                        Print Stadt occupancy rate
+  -b BUNDESLAND, --bundesland BUNDESLAND
+                        Show the percentage of occupied beds in a specific state. Example: -b BY
+  -g, --germany         Show the Percentage of all occupied beds in Germany
+  -gn, --germanywithemergency
+                        Show the Percentage of all occupied beds in Germany including the 7 day emergency beds
+  -bn BUNDESLANDWITHEMERGENCY, --bundeslandwithemergency BUNDESLANDWITHEMERGENCY
                         Show the percentage of occupied beds in a specific state including the 7 day emergency beds. Example: -bn BY
+  -la, --listareas      Prints all names of the Landreise and Städte
+  -a AREAS, --areas AREAS
+                        Receives JSON file with defined areas of interest.
+
 ```
 
 ### Examples
@@ -95,6 +113,18 @@ Utilization of intensive care beds in bavaria in percent (including emergency
 beds which could be provided within 7 days)
 
 `./IntensivregisterUpdate.py -bn BY`
+
+Utilization of intensive care in a specific area
+
+Landreis
+
+`./IntensivregisterUpdate.py -lk Würzburg`
+Stadt
+`./IntensivregisterUpdate.py -s Würzburg`
+
+Utilization of intensive care in a specific area from json file
+
+`./IntensivregisterUpdate.py -a areas_example.json`
 
 # Slack Bot (Using `slackclient`)
 
