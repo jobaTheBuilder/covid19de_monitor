@@ -46,7 +46,7 @@ class IntensivregisterUpdate:
                 return item['bettenBelegtToBettenGesamtPercent']
 
     def get_occupancy_by_bl_in_percent_with_7d_emgergancy_beds_in_percent(self,bl):
-        return self.get_all_occupied_beds_by_bl(bl)/(self.get_all_beds_by_bl(bl)+self.get_all_emergency_beds_7d_by_bl(bl)) * 100
+        return round(self.get_all_occupied_beds_by_bl(bl)/(self.get_all_beds_by_bl(bl)+self.get_all_emergency_beds_7d_by_bl(bl)) * 100, 1)
 
     def get_all_beds_by_bl(self,bl):
         bl_full = BL_DICT[bl]
@@ -66,7 +66,6 @@ class IntensivregisterUpdate:
             if item['bundesland'] == bl_full:
                 return item['intensivBettenNotfall7d']
 
-
     def get_all_beds(self):
         b_sum = 0
         for item in self.bl_data:
@@ -85,12 +84,11 @@ class IntensivregisterUpdate:
             be_sum += item['intensivBettenNotfall7d']
         return be_sum
 
-
     def get_overall_occupancy_in_percent(self):
-        return self.get_all_occupied_beds()/self.get_all_beds() * 100
+        return round(self.get_all_occupied_beds()/self.get_all_beds() * 100, 1)
 
     def get_overall_occupancy_in_percent_with_emergency_beds(self):
-        return self.get_all_occupied_beds()/(self.get_all_beds() + self.get_all_emergency_beds_7d())* 100
+        return round(self.get_all_occupied_beds()/(self.get_all_beds() + self.get_all_emergency_beds_7d())* 100, 1)
 
     def get_date(self):
         for item in self.bl_data:
