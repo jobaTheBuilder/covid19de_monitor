@@ -126,6 +126,10 @@ Utilization of intensive care in a specific area from json file
 # ImpfungUpdate
 Provides information about the vaccination status in germany. 
 
+## Requirements
+
+- pandas `pip install pandas`
+
 ## Usage
 
 ### Command Line
