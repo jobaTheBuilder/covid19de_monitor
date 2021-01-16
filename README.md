@@ -124,11 +124,13 @@ Utilization of intensive care in a specific area from json file
 `./IntensivregisterUpdate.py -a areas_example.json`
 
 # ImpfungUpdate
-Provides information about the vaccination status in germany.
+Provides information about the vaccination status in germany. 
 
 ## Usage
 
 ### Command Line
+If no Bundesland is given as argument it will print information about Germany
+
 ```
 optional arguments:
   -h, --help            show this help message and exit
