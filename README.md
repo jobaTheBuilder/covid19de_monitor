@@ -123,6 +123,37 @@ Utilization of intensive care in a specific area from json file
 
 `./IntensivregisterUpdate.py -a areas_example.json`
 
+# ImpfungUpdate
+Provides information about the vaccination status in germany.
+
+## Usage
+
+### Command Line
+```
+optional arguments:
+  -h, --help            show this help message and exit
+  -bl BUNDESLAND, --bundesland BUNDESLAND
+                        Information about a Bundesland in germany
+  -a, --all             All accinaations in a specific area
+  -la, --listareas      Lists all available areas
+  -p PREFIX, --prefix PREFIX
+                        Print given prefix as String before the actual number. Example: -p 'Bayern Vaccinations' -bl Bayern -a
+  -d, --difference      Difference in Vaccinations to the day before
+  -t, --thousand        Vaccinations per 1k citizens
+
+```
+
+### Example
+
+Get all registred vaccinations in germany
+`./ImpfungUpdate.py -p "Alle durchgeführten Impfungen in Deutschland: " -a`
+
+Get difference to the day before in Bavaria
+`./ImpfungUpdate.py -p "Vergleich zum Vortag Bayern: " -bl Bayern -d`
+
+Get vaccination per 1000 citizens in Bavaria
+`./ImpfungUpdate.py -bl Bayern -t`
+
 # Slack Bot (Using `slackclient`)
 
 Let's you directly send the COVID19 data to a slack channel via a custom Slack APP.
