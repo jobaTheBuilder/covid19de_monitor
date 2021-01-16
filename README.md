@@ -145,13 +145,13 @@ optional arguments:
 
 ### Example
 
-Get all registred vaccinations in germany
+Get all registred vaccinations in germany  
 `./ImpfungUpdate.py -p "Alle durchgeführten Impfungen in Deutschland: " -a`
 
-Get difference to the day before in Bavaria
+Get difference to the day before in Bavaria  
 `./ImpfungUpdate.py -p "Vergleich zum Vortag Bayern: " -bl Bayern -d`
 
-Get vaccination per 1000 citizens in Bavaria
+Get vaccination per 1000 citizens in Bavaria  
 `./ImpfungUpdate.py -bl Bayern -t`
 
 # Slack Bot (Using `slackclient`)
