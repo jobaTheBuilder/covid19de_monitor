@@ -124,15 +124,13 @@ Utilization of intensive care in a specific area from json file
 `./IntensivregisterUpdate.py -a areas_example.json`
 
 # ImpfungUpdate
-Provides information about the vaccination status in germany. 
 
-## Requirements
-
-- pandas `pip install pandas`
+Provides information about the vaccination status in germany. Uses API from `https://api.corona-zahlen.org/docs/` to fetch data.
 
 ## Usage
 
 ### Command Line
+
 If no Bundesland is given as argument it will print information about Germany
 
 ```
@@ -143,13 +141,24 @@ optional arguments:
   -a, --all             All accinaations in a specific area
   -la, --listareas      Lists all available areas
   -p PREFIX, --prefix PREFIX
-                        Print given prefix as String before the actual number. Example: -p 'Bayern Vaccinations' -bl Bayern -a
-  -d, --difference      Difference in Vaccinations to the day before
-  -t, --thousand        Vaccinations per 1k citizens
-
+                        Print given prefix as string before the actual number. Example: -p 'Bayern Vaccinations' -bl Bayern -a
+  -d, --difference      Difference in vaccinations to the day before for all vaccination
+  -df, --differencefirst
+                        Difference in vaccinations to the day before for the first vaccination
+  -ds, --differencesecond
+                        Difference in vaccinations to the day before for the second vaccination
+  -q, --quote           Vaccinations quote
+  -vf, --vaccinationfirst
+                        Number of people who recived their first vaccination
+  -vs, --vaccinationsecond
+                        Number of people who recived their second vaccination
+  -vb VACCINEBRAND, --vaccinebrand VACCINEBRAND
+                        Number of vaccinations for a specified vaccine
+  -lvb, --listvaccinebrand
+                        Lists all available vaccine brands and the amount of times they were being used
 ```
 
-### Example
+### Examples
 
 Get all registred vaccinations in germany  
 `./ImpfungUpdate.py -p "Alle durchgeführten Impfungen in Deutschland: " -a`
