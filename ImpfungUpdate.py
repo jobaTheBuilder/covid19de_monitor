@@ -7,7 +7,7 @@ import csv
 
 API = 'https://api.corona-zahlen.org/vaccinations'
 DELIVERY_API= 'https://impfdashboard.de/static/data/germany_deliveries_timeseries_v2.tsv'
-DELIVERED_VAC_DICT = {"comirnaty": "biontech","moderna": "moderna","astra": "astraZeneca"}
+DELIVERED_VAC_DICT = {"comirnaty": "biontech","astra": "astraZeneca"}
 
 class ImpfungUpdate:
 
