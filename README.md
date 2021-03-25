@@ -125,7 +125,7 @@ Utilization of intensive care in a specific area from json file
 
 # ImpfungUpdate
 
-Provides information about the vaccination status in germany. Uses API from `https://api.corona-zahlen.org/docs/` to fetch data.
+Provides information about the vaccination status in germany. Uses API from `https://api.corona-zahlen.org/docs/` to fetch data. Information about shipped vaccines in provided by [Impfdashboard.de](https://impfdashboard.de/daten).
 
 ## Usage
 
@@ -134,6 +134,8 @@ Provides information about the vaccination status in germany. Uses API from `htt
 If no Bundesland is given as argument it will print information about Germany
 
 ```
+usage: ImpfungUpdate.py [-h] [-bl BUNDESLAND] [-a] [-la] [-p PREFIX] [-d] [-df] [-ds] [-q] [-vf] [-vs] [-vb VACCINEBRAND] [-lvb] [-sv] [-sq] [-lsv] [-svb SHIPPEDVACCINEBRAND] [-svbq SHIPPEDVACCINEBRANDQUOTE]
+
 optional arguments:
   -h, --help            show this help message and exit
   -bl BUNDESLAND, --bundesland BUNDESLAND
@@ -156,6 +158,16 @@ optional arguments:
                         Number of vaccinations for a specified vaccine
   -lvb, --listvaccinebrand
                         Lists all available vaccine brands and the amount of times they were being used
+  -sv, --shippedvaccines
+                        All shipped vaccines
+  -sq, --shippedvaccinatedquote
+                        Quote of administered vaccinations / delivered vaccines in percent
+  -lsv, --listshippedvaccines
+                        Lists all shipped vaccines
+  -svb SHIPPEDVACCINEBRAND, --shippedvaccinebrand SHIPPEDVACCINEBRAND
+                        Get all shipped vaccines by brand
+  -svbq SHIPPEDVACCINEBRANDQUOTE, --shippedvaccinebrandquote SHIPPEDVACCINEBRANDQUOTE
+                        Get shipped vaccines vaccination quote by brand
 ```
 
 ### Examples
