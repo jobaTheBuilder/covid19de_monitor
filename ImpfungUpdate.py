@@ -108,9 +108,9 @@ if __name__ == "__main__":
     parser.add_argument("-lvb","--listvaccinebrand",help="Lists all available vaccine brands and the amount of times they were being used", action="store_true")
     parser.add_argument("-sv","--shippedvaccines",help="All shipped vaccines", action="store_true")
     parser.add_argument("-sq","--shippedvaccinatedquote",help="Quote of administered vaccinations / delivered vaccines in percent",action="store_true")
-    parser.add_argument("-lsv","--listshippedvaccines",help="Lists all shipped vaccines",action="store_true")
-    parser.add_argument("-svb","--shippedvaccinebrand",help="Get all shipped vaccines by brand")
-    parser.add_argument("-svbq","--shippedvaccinebrandquote",help="Get shipped vaccines vaccination quote by brand")
+    parser.add_argument("-ls","--listshippedvaccines",help="Lists all shipped vaccines",action="store_true")
+    parser.add_argument("-sb","--shippedvaccinebrand",help="Get all shipped vaccines by brand")
+    parser.add_argument("-sbq","--shippedvaccinebrandquote",help="Get shipped vaccines vaccination quote by brand")
     args = parser.parse_args()
 
     iu = ImpfungUpdate()
