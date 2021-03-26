@@ -125,7 +125,7 @@ Utilization of intensive care in a specific area from json file
 
 # ImpfungUpdate
 
-Provides information about the vaccination status in germany. Uses API from `https://api.corona-zahlen.org/docs/` to fetch data.
+Provides information about the vaccination status in germany. Uses API from `https://api.corona-zahlen.org/docs/` to fetch data. Information about shipped vaccines in provided by [Impfdashboard.de](https://impfdashboard.de/daten).
 
 ## Usage
 
@@ -133,7 +133,9 @@ Provides information about the vaccination status in germany. Uses API from `htt
 
 If no Bundesland is given as argument it will print information about Germany
 
-```
+````
+usage: ImpfungUpdate.py [-h] [-bl BUNDESLAND] [-a] [-la] [-p PREFIX] [-d] [-df] [-ds] [-q] [-vf] [-vs] [-vb VACCINEBRAND] [-lvb] [-sv] [-sq] [-ls] [-sb SHIPPEDVACCINEBRAND] [-sbq SHIPPEDVACCINEBRANDQUOTE]
+
 optional arguments:
   -h, --help            show this help message and exit
   -bl BUNDESLAND, --bundesland BUNDESLAND
@@ -156,17 +158,26 @@ optional arguments:
                         Number of vaccinations for a specified vaccine
   -lvb, --listvaccinebrand
                         Lists all available vaccine brands and the amount of times they were being used
-```
+  -sv, --shippedvaccines
+                        All shipped vaccines
+  -sq, --shippedvaccinatedquote
+                        Quote of administered vaccinations / delivered vaccines in percent
+  -ls, --listshippedvaccines
+                        Lists all shipped vaccines
+  -sb SHIPPEDVACCINEBRAND, --shippedvaccinebrand SHIPPEDVACCINEBRAND
+                        Get all shipped vaccines by brand
+  -sbq SHIPPEDVACCINEBRANDQUOTE, --shippedvaccinebrandquote SHIPPEDVACCINEBRANDQUOTE
+                        Get shipped vaccines vaccination quote by brand```
 
 ### Examples
 
-Get all registred vaccinations in germany  
+Get all registred vaccinations in germany
 `./ImpfungUpdate.py -p "Alle durchgeführten Impfungen in Deutschland: " -a`
 
-Get difference to the day before in Bavaria  
+Get difference to the day before in Bavaria
 `./ImpfungUpdate.py -p "Vergleich zum Vortag Bayern: " -bl Bayern -d`
 
-Get vaccination per 1000 citizens in Bavaria  
+Get vaccination per 1000 citizens in Bavaria
 `./ImpfungUpdate.py -bl Bayern -t`
 
 # Slack Bot (Using `slackclient`)
@@ -234,3 +245,4 @@ guide to get a set of token and signing secret needed to connect the bot to Slac
 
 The included `Dockerfile` produces a container running the bot, exposing port 3000 for incoming messages.
 Be sure to bind-mount the `slack.config.json` to `/app/config` or make it otherwise available.
+````

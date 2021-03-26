@@ -3,8 +3,11 @@
 import argparse
 import requests
 import json
+import csv
 
 API = 'https://api.corona-zahlen.org/vaccinations'
+DELIVERY_API= 'https://impfdashboard.de/static/data/germany_deliveries_timeseries_v2.tsv'
+DELIVERED_VAC_DICT = {"comirnaty": "biontech","astra": "astraZeneca"}
 
 class ImpfungUpdate:
 
@@ -12,6 +15,20 @@ class ImpfungUpdate:
         self.prefix = ''
         result = requests.get(API)
         self.data = result.json()["data"]
+        self.delivery_data = self.get_delivery_data()
+
+    def get_delivery_data(self):
+        tsv_f = requests.get(DELIVERY_API).content.decode('utf-8')
+        data = csv.DictReader(tsv_f.splitlines(),delimiter="\t")
+        result_data = {}
+        for entry in data:
+            vaccine = entry['impfstoff']
+            if vaccine not in result_data.keys():
+                result_data[vaccine] = int(entry['dosen'])
+            else:
+                result_data[vaccine] += int(entry['dosen'])
+        return result_data
+
 
     def get_vac_data(self,area, key, isSecond=False):
         area_data = []
@@ -25,13 +42,13 @@ class ImpfungUpdate:
             return area_data[key]
 
     def get_vac_all(self, area):
-        return self.get_vac_data(area,"administeredVaccinations")                   
-    
+        return self.get_vac_data(area,"administeredVaccinations")
+
     def get_vac_all_delta(self, area):
         return int(self.get_vac_first_delta(area)) + int(self.get_vac_second_delta(area))
 
     def get_vac_first(self, area):
-        return self.get_vac_data(area,"vaccinated")                   
+        return self.get_vac_data(area,"vaccinated")
 
     def get_vac_second(self,area):
         return self.get_vac_data(area,"vaccinated",True)
@@ -46,7 +63,10 @@ class ImpfungUpdate:
         return self.get_vac_data(area,"quote")
 
     def get_vac_by_brand(self,area,brand):
-        return self.get_vac_data(area,"vaccination")[brand]
+        if brand not in DELIVERED_VAC_DICT.values():
+            if brand in DELIVERED_VAC_DICT.keys():
+                brand = DELIVERED_VAC_DICT[brand]
+        return self.get_vac_data(area,"vaccination")[brand] + self.get_vac_data(area,"vaccination",True)[brand]
 
     def get_all_vac_brands(self,area):
         return self.get_vac_data(area,"vaccination")
@@ -55,6 +75,22 @@ class ImpfungUpdate:
         abb = self.data["states"].keys()
         for key in abb:
             print("{key} for {name}".format(key=key,name=self.data["states"][key]["name"]))
+
+    def get_all_delivered_vaccnies(self):
+        return sum(self.delivery_data.values())
+
+    def get_all_delivered_vaccines_quote(self):
+        return round(self.get_vac_all("")/self.get_all_delivered_vaccnies()*10000) / 100
+
+    def get_delivered_vaccines_by_brand(self,brand):
+        if brand not in self.delivery_data.keys():
+            for key, value in DELIVERED_VAC_DICT.items():
+                if brand == value:
+                    brand = key
+        return self.delivery_data[brand]
+
+    def get_delivered_vaccines_by_brand_quote(self,brand):
+        return round(self.get_vac_by_brand("",brand)/self.get_delivered_vaccines_by_brand(brand) * 10000) / 100
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -70,8 +106,13 @@ if __name__ == "__main__":
     parser.add_argument("-vs", "--vaccinationsecond", help="Number of people who recived their second vaccination", action="store_true")
     parser.add_argument("-vb","--vaccinebrand",help="Number of vaccinations for a specified vaccine")
     parser.add_argument("-lvb","--listvaccinebrand",help="Lists all available vaccine brands and the amount of times they were being used", action="store_true")
+    parser.add_argument("-sv","--shippedvaccines",help="All shipped vaccines", action="store_true")
+    parser.add_argument("-sq","--shippedvaccinatedquote",help="Quote of administered vaccinations / delivered vaccines in percent",action="store_true")
+    parser.add_argument("-ls","--listshippedvaccines",help="Lists all shipped vaccines",action="store_true")
+    parser.add_argument("-sb","--shippedvaccinebrand",help="Get all shipped vaccines by brand")
+    parser.add_argument("-sbq","--shippedvaccinebrandquote",help="Get shipped vaccines vaccination quote by brand")
     args = parser.parse_args()
-    
+
     iu = ImpfungUpdate()
     area = ''
     if args.prefix:
@@ -98,5 +139,15 @@ if __name__ == "__main__":
         print(iu.prefix + f"{iu.get_vac_by_brand(area,args.vaccinebrand):,}")
     elif args.listvaccinebrand:
         print(iu.prefix + json.dumps(iu.get_all_vac_brands(area),indent=4))
+    elif args.shippedvaccines:
+        print(iu.prefix + f"{iu.get_all_delivered_vaccnies():,}")
+    elif args.shippedvaccinatedquote:
+        print(iu.prefix + str(iu.get_all_delivered_vaccines_quote()) + "%")
+    elif args.listshippedvaccines:
+        print(iu.prefix + json.dumps(iu.delivery_data,indent=4))
+    elif args.shippedvaccinebrand:
+        print(iu.prefix + f"{iu.get_delivered_vaccines_by_brand(args.shippedvaccinebrand):,}")
+    elif args.shippedvaccinebrandquote:
+        print(iu.prefix + str(iu.get_delivered_vaccines_by_brand_quote(args.shippedvaccinebrandquote)))
     else:
         print("Please use help to see your options (--help)")
