@@ -43,14 +43,19 @@ class COVIDUpdate:
         response = requests.get(self.rest_url, verify=True)
         if response.ok:
             response_data = json.loads(response.content)
-            features = response_data['features']
-            for feature in features:
-                gf = self.get(feature, 'GEN')
-                bf = self.get(feature, 'BEZ')
-                if not filter_string:
-                    area_list.append({'GEN': gf, 'BEZ': bf})
-                elif filter_string in gf or filter_string in bf:
-                    area_list.append({'GEN': gf, 'BEZ': bf})
+            if 'error' in response_data:
+                error_code = response_data['error']['code']
+                error_message = response_data['error']['message']
+                area_list.append({'GEN': error_code, 'BEZ': error_message})
+            else:
+                features = response_data['features']
+                for feature in features:
+                    gf = self.get(feature, 'GEN')
+                    bf = self.get(feature, 'BEZ')
+                    if not filter_string:
+                        area_list.append({'GEN': gf, 'BEZ': bf})
+                    elif filter_string in gf or filter_string in bf:
+                        area_list.append({'GEN': gf, 'BEZ': bf})
         return area_list
 
     def list_areas(self):
