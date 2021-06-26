@@ -4,3 +4,6 @@ callCOVIDUpdate.sh
 /vio_areas.json
 /config/slack.config.json
 .idea
+mum_areas.json
+mk_areas.json
+kreise.json
