@@ -163,4 +163,3 @@ def get_incidence_indicator(value):
 
 if __name__ == "__main__":
     Timer(next_update(), post_update, ()).start()
-    post_update()
