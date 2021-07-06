@@ -98,7 +98,8 @@ def get_overall_data():
         
         if last_auto_update_overall_result:
             old_r_value = last_auto_update_overall_result["r"]["value"]
-            result += f" (gestern: {old_r_value})"    
+            dif = rValue - old_r_value
+            result += f" (gestern: {old_r_value} {get_dif_indicator(dif)})"    
 
         last_auto_update_overall_result = data
 
