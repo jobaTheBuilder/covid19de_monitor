@@ -6,6 +6,7 @@ from IntensivregisterUpdate import IntensivregisterUpdate
 from ImpfungUpdate import ImpfungUpdate
 import requests
 import json
+import time
 
 last_auto_update_result = None
 last_auto_update_overall_result = None
@@ -13,7 +14,7 @@ last_auto_update_overall_result = None
 POPULATION_GERMANY = 84048123
 
 
-with open('config/rocketchat.config.json') as config_file:
+with open('config/rocketchat.config.json.example') as config_file:
     config = json.load(config_file)
 
 def next_update():
@@ -45,7 +46,7 @@ def get_incidence_areas():
                     previous_value = previous_result.data[area]
                     diff_pct = (value - previous_value) / previous_value
 
-                    extra_info += f"  (gestern: {previous_result.data[area]}"
+                    extra_info += f" (gestern: {previous_result.data[area]}"
 
                     extra_info += get_dif_indicator(diff_pct)
 
@@ -54,10 +55,11 @@ def get_incidence_areas():
             result += f">> {area}: *{value}* {extra_info}\n"
 
         result += '>> RKI ' + ', '.join(resultCases.dates)
-    
+
+        last_auto_update_result = resultCases
+
     except:
         result += "Inzidenzen für die Landkreise konnten nicht geladen werden"
-
     return result
 
 
@@ -91,13 +93,13 @@ def get_overall_data():
         if last_auto_update_overall_result:
             old_cases = round(last_auto_update_overall_result["weekIncidence"],2)
             dif = casesPerWeek - old_cases 
-            result += f" (gestern: {dif} {get_dif_indicator(dif)})"
+            result += f" (gestern: {old_cases} {get_dif_indicator(dif)})"
 
         result += f"\n > r-Wert: {rValue}"
         
         if last_auto_update_overall_result:
-            old_r_value = {last_auto_update_overall_result["r"]["value"]}
-            result += f"(gestern: {old_r_value})"    
+            old_r_value = last_auto_update_overall_result["r"]["value"]
+            result += f" (gestern: {old_r_value})"    
 
         last_auto_update_overall_result = data
 
@@ -141,11 +143,11 @@ def get_dif_indicator(difference):
     elif difference > 0.01:
         indicator = ':arrow_up_small:'
     elif difference < -0.1:
-        indicator = ' :arrow_double_down:'
+        indicator = ':arrow_double_down:'
     elif difference < -0.01:
-        indicator = ' :arrow_down_small:'
+        indicator = ':arrow_down_small:'
     else:
-        indicator = ' :left_right_arrow:'
+        indicator = ':left_right_arrow:'
     return indicator
 
 def get_incidence_indicator(value):
