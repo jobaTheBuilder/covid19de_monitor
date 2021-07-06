@@ -13,7 +13,7 @@ last_auto_update_overall_result = None
 POPULATION_GERMANY = 84048123
 
 
-with open('config/rocketchat.config.json.example') as config_file:
+with open('config/rocketchat.config.json') as config_file:
     config = json.load(config_file)
 
 def next_update():
