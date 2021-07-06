@@ -6,7 +6,6 @@ from IntensivregisterUpdate import IntensivregisterUpdate
 from ImpfungUpdate import ImpfungUpdate
 import requests
 import json
-import time
 
 last_auto_update_result = None
 last_auto_update_overall_result = None
