@@ -45,7 +45,7 @@ def get_incidence_areas():
                     previous_value = previous_result.data[area]
                     diff_pct = (value - previous_value) / previous_value
 
-                    extra_info += f" (gestern: {previous_result.data[area]}"
+                    extra_info += f" (gestern: {previous_result.data[area]} "
 
                     extra_info += get_dif_indicator(diff_pct)
 
