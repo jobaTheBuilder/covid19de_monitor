@@ -86,7 +86,7 @@ def get_overall_data():
     try:
         data =  requests.get("https://api.corona-zahlen.org/germany").json()
         casesPerWeek = round(data["weekIncidence"],2)
-        rValue = data["r"]["value"]
+        rValue = data["r"]["rValue7Days"]["value"]
         result = f"> Deutschland: {casesPerWeek} {get_incidence_indicator(casesPerWeek)}"
         
         if last_auto_update_overall_result:
@@ -94,10 +94,10 @@ def get_overall_data():
             dif = casesPerWeek - old_cases 
             result += f" (gestern: {old_cases} {get_dif_indicator(dif)})"
 
-        result += f"\n > r-Wert: {rValue}"
+        result += f"\n > r-Wert (7-Tage): {rValue}"
         
         if last_auto_update_overall_result:
-            old_r_value = last_auto_update_overall_result["r"]["value"]
+            old_r_value = last_auto_update_overall_result["r"]["rValue7Days"]["value"]
             dif = rValue - old_r_value
             result += f" (gestern: {old_r_value} {get_dif_indicator(dif)})"    
 
