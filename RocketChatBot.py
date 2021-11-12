@@ -6,6 +6,7 @@ from IntensivregisterUpdate import IntensivregisterUpdate
 from ImpfungUpdate import ImpfungUpdate
 import requests
 import json
+from KrankenhausAmpelUpdate import *
 
 last_auto_update_result = None
 last_auto_update_overall_result = None
@@ -33,13 +34,13 @@ def get_incidence_areas():
     previous_result = last_auto_update_result
     result = ""
 
-    try: 
+    try:
         resultCases = COVIDUpdate().check(config['auto_update_areas'])
         for area in sorted(resultCases.data):
             value = resultCases.data[area]
 
             extra_info = get_incidence_indicator(value)
-           
+
             if previous_result:
                 if area in previous_result.data:
                     previous_value = previous_result.data[area]
@@ -69,10 +70,10 @@ def post_update():
         message = "**:mask: 7-Tage Inzidenzen**\n"
         message += get_overall_data() + "\n"
         message += get_incidence_areas()
-
         message += get_intensive_care()
-
         message += get_vac()
+        message += get_krankenhaus_ampel()
+
 
         requests.post(config['webhook_url'], {'text': message})
 
@@ -87,19 +88,27 @@ def get_overall_data():
         data =  requests.get("https://api.corona-zahlen.org/germany").json()
         casesPerWeek = round(data["weekIncidence"],2)
         rValue = data["r"]["rValue7Days"]["value"]
+        deltaCases = data["delta"]["cases"]
         result = f"> Deutschland: {casesPerWeek} {get_incidence_indicator(casesPerWeek)}"
-        
+
         if last_auto_update_overall_result:
             old_cases = round(last_auto_update_overall_result["weekIncidence"],2)
-            dif = casesPerWeek - old_cases 
+            dif = casesPerWeek - old_cases
             result += f" (gestern: {old_cases} {get_dif_indicator(dif)})"
 
         result += f"\n > r-Wert (7-Tage): {rValue}"
-        
+
         if last_auto_update_overall_result:
             old_r_value = last_auto_update_overall_result["r"]["rValue7Days"]["value"]
             dif = rValue - old_r_value
-            result += f" (gestern: {old_r_value} {get_dif_indicator(dif)})"    
+            result += f" (gestern: {old_r_value} {get_dif_indicator(dif)})"
+
+        result += f"\n > Tägliche Neuinfektionen: {deltaCases}"
+
+        if last_auto_update_overall_result:
+            oldDeltaCases = last_auto_update_overall_result["delta"]["cases"]
+            dif = deltaCases - oldDeltaCases
+            result += f" (gestern: {oldDeltaCases} {get_dif_indicator(dif)})"
 
         last_auto_update_overall_result = data
 
@@ -116,14 +125,14 @@ def get_vac():
         resultFirstQuote = round(resultFirst/POPULATION_GERMANY * 100,2)
         resultSecondQuote = round(resultSecond/POPULATION_GERMANY * 100,2)
         resultDeliveredVaccines = ImpfungUpdate().get_all_delivered_vaccnies()
-        
+
         result += f"> Erstimpfung: {resultFirst:,}   ({resultFirstQuote}%)\n"
         result += f"> Zweitimpfung: {resultSecond:,}  ({resultSecondQuote}%)\n"
         result += f"> Gelieferte Dosen: {resultDeliveredVaccines:,} (wöchentliche Aktualisierung)"
-        
+
     except:
         result += "> Keine Impfdaten verfügbar. Vermutlich wurde die Exceltabelle vom RKI wieder geändert..."
-    
+
     return result
 
 def get_intensive_care():
@@ -135,6 +144,26 @@ def get_intensive_care():
         result += "Keine Daten verfügbar..."
 
     return result
+
+def get_krankenhaus_ampel():
+    result = "\n\n <br/> \n\n **:vertical_traffic_light::beer: Krankenhaus Ampel Bayern**\n"
+    try:
+        ku = KrankenhausAmpelUpdate()
+        indicator = get_krankenhaus_ampel_indicator(ku.get_status())
+        result += f"\n > {indicator} Aktueller Status"
+        result += f"\n >> :yellow_circle: {ku.get_yellow_status_currently_formatted()} {ku.get_yellow_status_weekly_formatted()}"
+        result += f"\n >> :red_circle: {ku.get_red_status_formatted()}"
+    except:
+        result += "Keine Daten verfügbar"
+    return result
+
+
+def get_krankenhaus_ampel_indicator(status):
+    if status == Status().RED:
+        return ":red_circle:"
+    elif status == Status().YELLOW:
+        return ":yellow_circle:"
+    return ":green_circle:"
 
 def get_dif_indicator(difference):
     indicator = ""
@@ -160,7 +189,6 @@ def get_incidence_indicator(value):
         indicator = ':eight_pointed_black_star:'
     else:
         indicator += ':sparkle:'
-    
     return indicator
 
 if __name__ == "__main__":
