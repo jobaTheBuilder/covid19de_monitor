@@ -93,7 +93,7 @@ def get_overall_data():
 
         if last_auto_update_overall_result:
             old_cases = round(last_auto_update_overall_result["weekIncidence"],2)
-            dif = casesPerWeek - old_cases
+            dif = (casesPerWeek - old_cases) / old_cases
             result += f" (gestern: {old_cases} {get_dif_indicator(dif)})"
 
         result += f"\n > r-Wert (7-Tage): {rValue}"
@@ -107,7 +107,7 @@ def get_overall_data():
 
         if last_auto_update_overall_result:
             oldDeltaCases = last_auto_update_overall_result["delta"]["cases"]
-            dif = deltaCases - oldDeltaCases
+            dif = (deltaCases - oldDeltaCases) / oldDeltaCases
             result += f" (gestern: {oldDeltaCases} {get_dif_indicator(dif)})"
 
         last_auto_update_overall_result = data
