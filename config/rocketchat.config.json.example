@@ -19,5 +19,8 @@
       "BEZ": "Landkreis",
       "GEN": "Würzburg"
     }
-  ]
-}
+  ],
+  "auto_update_hospitalization":
+    ["BY","HE"]
+  }
+

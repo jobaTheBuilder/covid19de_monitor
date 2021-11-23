@@ -6,10 +6,11 @@ from IntensivregisterUpdate import IntensivregisterUpdate
 from ImpfungUpdate import ImpfungUpdate
 import requests
 import json
-from KrankenhausAmpelUpdate import *
 
 last_auto_update_result = None
 last_auto_update_overall_result = None
+last_auto_update_states = None
+#from worldometer.com
 #from worldometer.com
 POPULATION_GERMANY = 84048123
 
@@ -72,8 +73,7 @@ def post_update():
         message += get_incidence_areas()
         message += get_intensive_care()
         message += get_vac()
-        message += get_krankenhaus_ampel()
-
+        message += get_hospitalization()
 
         requests.post(config['webhook_url'], {'text': message})
 
@@ -118,7 +118,7 @@ def get_overall_data():
 
 
 def get_vac():
-    result = "\n\n <br/> \n\n **:syringe: Impfungen**\n"
+    result = "\n\n <br> \n\n **:syringe: Impfungen**\n"
     try:
         resultFirst = ImpfungUpdate().get_vac_first('')
         resultSecond = ImpfungUpdate().get_vac_second('')
@@ -136,7 +136,7 @@ def get_vac():
     return result
 
 def get_intensive_care():
-    result = "\n\n <br/> \n\n **:hospital: Auslastung Intensivstationen**\n"
+    result = "\n\n <br> \n\n **:bed: Auslastung Intensivstationen**\n"
     try:
         resultBeds = IntensivregisterUpdate().get_overall_occupancy_in_percent()
         result += f"> {resultBeds}%"
@@ -145,25 +145,29 @@ def get_intensive_care():
 
     return result
 
-def get_krankenhaus_ampel():
-    result = "\n\n <br/> \n\n **:vertical_traffic_light::beer: Krankenhaus Ampel Bayern**\n"
+def get_hospitalization():
+    global last_auto_update_states
+
+    result = "\n\n <br> \n\n **:hospital: 7-Tage-Inzidenz Hospitalisierungen**"
+    states = config['auto_update_hospitalization']
     try:
-        ku = KrankenhausAmpelUpdate()
-        indicator = get_krankenhaus_ampel_indicator(ku.get_status())
-        result += f"\n > {indicator} Aktueller Status"
-        result += f"\n >> :yellow_circle: {ku.get_yellow_status_currently_formatted()} {ku.get_yellow_status_weekly_formatted()}"
-        result += f"\n >> :red_circle: {ku.get_red_status_formatted()}"
+        data =  requests.get("https://api.corona-zahlen.org/states").json()
+        for state in states:
+            if state in data["data"]:
+                incidence = data["data"][state]["hospitalization"]["incidence7Days"]
+                name = data["data"][state]["name"]
+                indicator = get_hospitalization_indicator(incidence)
+                result += f"\n > {name}: {incidence} {indicator} "
+
+                if last_auto_update_states:
+                    incidence_old = last_auto_update_states["data"][state]["hospitalization"]["incidence7Days"]
+                    diff_pct = (incidence - incidence_old) / incidence_old
+                    result += f" (gestern: {incidence_old} {get_dif_indicator(diff_pct)})"
+
     except:
-        result += "Keine Daten verfügbar"
+        result += "\n Keine Hospitalisierungsraten verfügbar"
+
     return result
-
-
-def get_krankenhaus_ampel_indicator(status):
-    if status == Status().RED:
-        return ":red_circle:"
-    elif status == Status().YELLOW:
-        return ":yellow_circle:"
-    return ":green_circle:"
 
 def get_dif_indicator(difference):
     indicator = ""
@@ -178,6 +182,15 @@ def get_dif_indicator(difference):
     else:
         indicator = ':left_right_arrow:'
     return indicator
+
+def get_hospitalization_indicator(value):
+    if value >= 9:
+        return ":nine:"
+    elif value >= 6:
+        return ":six:"
+    elif value >= 3:
+        return ":three:"
+    return ":zero:"
 
 def get_incidence_indicator(value):
     indicator = ""

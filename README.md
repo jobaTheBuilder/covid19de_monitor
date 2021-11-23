@@ -249,7 +249,7 @@ Be sure to bind-mount the `slack.config.json` to `/app/config` or make it otherw
 
 # RocketChat Bot
 
-Works like the Slack Bot (using`bolt`). A webhook needs to be specified in a rocketchat.config.json.
+Works like the Slack Bot (using`bolt`). A webhook needs to be specified in a rocketchat.config.json. Additionally states 7 hospitalization incidence can be added by specifying the states abbreviations in the config. See `config/rocketchat.config.json.example`.
 
 ## Example output
 
