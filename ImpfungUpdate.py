@@ -30,14 +30,16 @@ class ImpfungUpdate:
         return result_data
 
 
-    def get_vac_data(self,area, key, isSecond=False):
+    def get_vac_data(self,area, key, dosis=1):
         area_data = []
         if area == '':
             area_data = self.data
         else:
             area_data = self.data["states"][area]
-        if isSecond:
+        if dosis == 2:
             return area_data["secondVaccination"][key]
+        elif dosis == 3:
+            return area_data["boosterVaccination"][key]
         else:
             return area_data[key]
 
@@ -51,13 +53,19 @@ class ImpfungUpdate:
         return self.get_vac_data(area,"vaccinated")
 
     def get_vac_second(self,area):
-        return self.get_vac_data(area,"vaccinated",True)
+        return self.get_vac_data(area,"vaccinated",2)
+    
+    def get_vac_booster(self, area):
+        return self.get_vac_data(area,"vaccinated",3)
 
     def get_vac_first_delta(self, area):
         return self.get_vac_data(area,"delta")
 
     def get_vac_second_delta(self,area):
-        return self.get_vac_data(area,"delta",True)
+        return self.get_vac_data(area,"delta",2)
+
+    def get_vac_booster_delta(self,area):
+        return self.get_vac_data(area,"delta",3)
 
     def get_vac_quote(self, area):
         return self.get_vac_data(area,"quote")
@@ -66,7 +74,8 @@ class ImpfungUpdate:
         if brand not in DELIVERED_VAC_DICT.values():
             if brand in DELIVERED_VAC_DICT.keys():
                 brand = DELIVERED_VAC_DICT[brand]
-        return self.get_vac_data(area,"vaccination")[brand] + self.get_vac_data(area,"vaccination",True)[brand]
+        return self.get_vac_data(area,"vaccination")[brand] + self.get_vac_data(area,"vaccination",2)[brand] + self.get_vac_data(area,"vaccination",3)[brand]
+
 
     def get_all_vac_brands(self,area):
         return self.get_vac_data(area,"vaccination")
@@ -104,8 +113,9 @@ if __name__ == "__main__":
     parser.add_argument("-q", "--quote", help="Vaccinations quote", action="store_true")
     parser.add_argument("-vf", "--vaccinationfirst", help="Number of people who recived their first vaccination", action="store_true")
     parser.add_argument("-vs", "--vaccinationsecond", help="Number of people who recived their second vaccination", action="store_true")
-    parser.add_argument("-vb","--vaccinebrand",help="Number of vaccinations for a specified vaccine")
-    parser.add_argument("-lvb","--listvaccinebrand",help="Lists all available vaccine brands and the amount of times they were being used", action="store_true")
+    parser.add_argument("-vb", "--vaccinationbooster", help="Number of people who recived their booster vaccination", action="store_true")
+    parser.add_argument("-vv","--vaccine",help="Number of vaccinations for a specified vaccine")
+    parser.add_argument("-lvv","--listvaccine",help="Lists all available vaccine brands and the amount of times they were being used", action="store_true")
     parser.add_argument("-sv","--shippedvaccines",help="All shipped vaccines", action="store_true")
     parser.add_argument("-sq","--shippedvaccinatedquote",help="Quote of administered vaccinations / delivered vaccines in percent",action="store_true")
     parser.add_argument("-ls","--listshippedvaccines",help="Lists all shipped vaccines",action="store_true")
@@ -135,6 +145,8 @@ if __name__ == "__main__":
         print(iu.prefix + f"{iu.get_vac_first(area):,}")
     elif args.vaccinationsecond:
         print(iu.prefix + f"{iu.get_vac_second(area):,}")
+    elif args.vaccinationbooster:
+        print(iu.prefix + f"{iu.get_vac_booster(area):,}")
     elif args.vaccinebrand:
         print(iu.prefix + f"{iu.get_vac_by_brand(area,args.vaccinebrand):,}")
     elif args.listvaccinebrand:
