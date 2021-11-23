@@ -246,3 +246,11 @@ guide to get a set of token and signing secret needed to connect the bot to Slac
 The included `Dockerfile` produces a container running the bot, exposing port 3000 for incoming messages.
 Be sure to bind-mount the `slack.config.json` to `/app/config` or make it otherwise available.
 ````
+
+# RocketChat Bot
+
+Works like the Slack Bot (using`bolt`). A webhook needs to be specified in a rocketchat.config.json. Additionally states 7 hospitalization incidence can be added by specifying the states abbreviations in the config. See `config/rocketchat.config.json.example`.
+
+## Example output
+
+![img](./img/rocketchat-example.jpg)

@@ -1,0 +1,26 @@
+{
+  "webhook_url": "SECRET",
+  "auto_update_hour": 6,
+  "auto_update_minute": 0,
+  "auto_update_areas": [
+    {
+      "BEZ": "Landkreis",
+      "GEN": "Fürstenfeldrbuck"
+    },
+    {
+      "BEZ": "Landkreis",
+      "GEN": "Waldeck-Frankenberg"
+    },
+    {
+      "BEZ": "Kreisfreie Stadt",
+      "GEN": "Würzburg"
+    },
+    {
+      "BEZ": "Landkreis",
+      "GEN": "Würzburg"
+    }
+  ],
+  "auto_update_hospitalization":
+    ["BY","HE"]
+  }
+
