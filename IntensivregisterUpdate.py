@@ -109,7 +109,7 @@ class IntensivregisterUpdate:
         for line in csvfile.readlines():
             lineStr = '\n'
             for i,item in enumerate(line.split(',')):
-                lineStr+='"'+headers[i].replace('\r\n','') +'" : "' + item.replace('\r\n','') + '",\n'
+                lineStr+='"'+headers[i].replace('\n','') +'" : "' + item.replace('\n','') + '",\n'
             arr.append(lineStr)
 
         csvfile.close()

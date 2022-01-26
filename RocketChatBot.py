@@ -120,14 +120,18 @@ def get_overall_data():
 def get_vac():
     result = "\n\n <br> \n\n **:syringe: Impfungen**\n"
     try:
-        resultFirst = ImpfungUpdate().get_vac_first('')
-        resultSecond = ImpfungUpdate().get_vac_second('')
+        iu = ImpfungUpdate()
+        resultFirst = iu.get_vac_first('')
+        resultSecond = iu.get_vac_second('')
+        resultBooster = iu.get_vac_booster('')
         resultFirstQuote = round(resultFirst/POPULATION_GERMANY * 100,2)
         resultSecondQuote = round(resultSecond/POPULATION_GERMANY * 100,2)
-        resultDeliveredVaccines = ImpfungUpdate().get_all_delivered_vaccnies()
+        resultBoosterQuote = round(resultBooster/POPULATION_GERMANY * 100,2)
+        resultDeliveredVaccines = iu.get_all_delivered_vaccnies()
 
         result += f"> Erstimpfung: {resultFirst:,}   ({resultFirstQuote}%)\n"
         result += f"> Zweitimpfung: {resultSecond:,}  ({resultSecondQuote}%)\n"
+        result += f"> BoosterImpfung: {resultBooster:,}  ({resultBoosterQuote}%)\n"
         result += f"> Gelieferte Dosen: {resultDeliveredVaccines:,} (wöchentliche Aktualisierung)"
 
     except:
